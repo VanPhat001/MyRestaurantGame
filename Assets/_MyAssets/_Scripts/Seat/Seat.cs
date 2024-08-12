@@ -3,8 +3,9 @@ using UnityEngine;
 public class Seat : MonoBehaviour
 {
     [SerializeField] private Transform _seatPoint;
-    [SerializeField] private GameObject _grabage;
     public Transform SeatPoint => _seatPoint;
+    [SerializeField] private GameObject _grabage;
+    public GameObject Grabage => _grabage;
 
     [SerializeField] private Transform _foodPoint;
     public Transform FoodPoint => _foodPoint;
@@ -37,12 +38,17 @@ public class Seat : MonoBehaviour
 
     public void ReleaseGarbage()
     {
-        if (!_grabage.activeSelf)
+        if (!HasGrabage())
         {
             return;
         }
         
         _grabage.SetActive(false);
         SetIsUsed(false);
+    }
+
+    public bool HasGrabage()
+    {
+        return _grabage.activeSelf;
     }
 }

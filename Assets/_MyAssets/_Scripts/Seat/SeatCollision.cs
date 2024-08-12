@@ -12,6 +12,15 @@ public class SeatCollision : MonoBehaviour
             return;
         }
 
+        if (!_seat.HasGrabage())
+        {
+            return;
+        }
+
         _seat.ReleaseGarbage();
+        var grabage = Instantiate(_seat.Grabage);
+        grabage.name = ItemName.Grabage.ToString();
+        grabage.SetActive(true);
+        PlayerManager.Singleton.ItemManager.CollectItem(ItemName.Grabage, new() { grabage });
     }
 }

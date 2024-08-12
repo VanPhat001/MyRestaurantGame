@@ -18,4 +18,17 @@ public class SeatManager : MonoBehaviour
     {
         return _seats.Find(item => !item.IsUsed);
     }
+
+    public List<Seat> FindGarbage()
+    {
+        List<Seat> list = new();
+        _seats.ForEach(item =>
+        {
+            if (item.HasGrabage())
+            {
+                list.Add(item);
+            }
+        });
+        return list;
+    }
 }

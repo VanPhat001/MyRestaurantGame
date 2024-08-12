@@ -2,5 +2,6 @@ using UnityEngine;
 
 public enum ItemName
 {
-    Sandwich
+    Sandwich,
+    Grabage
 }

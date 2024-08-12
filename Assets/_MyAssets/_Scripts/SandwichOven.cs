@@ -12,7 +12,7 @@ public class SandwichOven : MonoBehaviour
     [SerializeField] private float _heightOffset = .2f;
     [SerializeField] private int _capacity = 0;
     [SerializeField] private LayerMask _playerLayer;
-    private readonly float _finishTime = 4f;
+    private readonly float _finishTime = 6f;
     private float _timer = 0;
 
     private readonly int OpenState = Animator.StringToHash("open");

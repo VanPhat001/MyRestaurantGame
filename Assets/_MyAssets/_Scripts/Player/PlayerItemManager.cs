@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerItemManager : MonoBehaviour
@@ -6,7 +8,6 @@ public class PlayerItemManager : MonoBehaviour
     [SerializeField] private Transform _itemStartPoint;
     private PlayerManager _manager;
     private float _coin = 0;
-    private int _itemCount = 0;
     private float _itemOffsetHeight = .1f;
     private Dictionary<ItemName, int> _collectedItem = new();
     private Dictionary<ItemName, int> _capacity = new() {
@@ -49,11 +50,10 @@ public class PlayerItemManager : MonoBehaviour
         {
             var go = goList[i].transform;
             go.SetParent(_itemStartPoint);
-            go.localPosition = (i + _itemCount + 1) * Vector3.up * _itemOffsetHeight;
+            go.localPosition = _itemStartPoint.childCount * Vector3.up * _itemOffsetHeight;
         }
 
         _collectedItem[itemName] += number;
-        _itemCount += number;
     }
 
     public int NumberItemGet(ItemName itemName)
@@ -69,6 +69,57 @@ public class PlayerItemManager : MonoBehaviour
         }
 
         return _capacity[itemName] - _collectedItem[itemName];
+    }
+
+    public int NumberItem(ItemName itemName)
+    {
+        if (_collectedItem.TryGetValue(itemName, out var number))
+        {
+            return number;
+        }
+        return 0;
+    }
+
+    public void RemoveItem(ItemName itemName, int count)
+    {
+        if (!_collectedItem.ContainsKey(itemName))
+        {
+            _collectedItem[itemName] = 0;
+        }
+
+        if (_collectedItem[itemName] < count)
+        {
+            Debug.LogError("_collectedItem value is less than count");
+        }
+
+        _collectedItem[itemName] -= count;
+        int d = 0;
+        for (int i = _itemStartPoint.childCount - 1; i >= 0; i--)
+        {
+            var item = _itemStartPoint.GetChild(i);
+            if (item.name != itemName.ToString())
+            {
+                continue;
+            }
+            item.GetComponent<IReleaseable>().Release();
+            d++;
+
+            if (d >= count)
+            {
+                return;
+            }
+        }
+
+        StartCoroutine(UpdateUIAfterNextFrame());
+    }
+
+    IEnumerator UpdateUIAfterNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        for (int i = 0; i < _itemStartPoint.childCount; i++)
+        {
+            _itemStartPoint.GetChild(i).localPosition = Vector3.up * _itemOffsetHeight * i;
+        }
     }
 
 }

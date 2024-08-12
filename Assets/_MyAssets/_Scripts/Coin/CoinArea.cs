@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class CoinArea : MonoBehaviour
 {
+    [SerializeField] private bool _autoFill = true;
     [SerializeField] private List<Transform> _spawnPoints;
+    [SerializeField] private Transform _container;
     [SerializeField] private float _totalCoin = 100;
     [SerializeField] private float _coinHeight = .2f;
     [SerializeField] private int _coinNumber = 20;
@@ -11,7 +13,10 @@ public class CoinArea : MonoBehaviour
 
     void Start()
     {
-        AutoFillCoin(_totalCoin, _coinNumber);
+        if (_autoFill)
+        {
+            AutoFillCoin(_totalCoin, _coinNumber);
+        }
     }
 
     void AutoFillCoin(float total, int coinNumber)
@@ -19,10 +24,20 @@ public class CoinArea : MonoBehaviour
         float value = total / coinNumber;
         for (int i = 0; i < coinNumber; i++)
         {
-            var coin = CoinPool.Singleton.Get(CoinPool.CoinName.CoinStar, this.transform).GetComponent<Coin>();
-            coin.transform.position = _spawnPoints[i % _spawnPoints.Count].position + _coinHeight * (int)(i / _spawnPoints.Count) * Vector3.up;
-            coin.Init(true);
-            coin.SetValue(value);
+            AddCoin(value);
+            // var coin = CoinPool.Singleton.Get(CoinPool.CoinName.CoinStar, this.transform).GetComponent<Coin>();
+            // coin.transform.position = _spawnPoints[i % _spawnPoints.Count].position + _coinHeight * (int)(i / _spawnPoints.Count) * Vector3.up;
+            // coin.Init(true);
+            // coin.SetValue(value);
         }
+    }
+
+    public void AddCoin(float value)
+    {
+        var coin = CoinPool.Singleton.Get(CoinPool.CoinName.CoinStar, _container).GetComponent<Coin>();
+        var currentNumberCoin = _container.childCount;
+        coin.transform.position = _spawnPoints[currentNumberCoin % _spawnPoints.Count].position + _coinHeight * (int)(currentNumberCoin / _spawnPoints.Count) * Vector3.up;
+        coin.Init(true);
+        coin.SetValue(value);
     }
 }

@@ -9,6 +9,7 @@ public class SandwichOven : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _sandwichPoint;
     [SerializeField] private Transform _spanwPoint;
+    public Transform SpawnPoint => _spanwPoint;
     [SerializeField] private float _heightOffset = .2f;
     [SerializeField] private int _capacity = 0;
     [SerializeField] private LayerMask _playerLayer;
@@ -59,9 +60,14 @@ public class SandwichOven : MonoBehaviour
         SetOpenState(false);
     }
 
-    bool IsFull()
+    public bool IsFull()
     {
         return _spanwPoint.childCount >= _capacity;
+    }
+
+    public bool HasSandwich()
+    {
+        return _spanwPoint.childCount > 0;
     }
 
 
@@ -85,7 +91,7 @@ public class SandwichOven : MonoBehaviour
         SendItem();
     }
 
-    List<GameObject> PopSandwich(int number)
+    public List<GameObject> PopSandwich(int number)
     {
         var list = new List<GameObject>();
         int lastIndex = _spanwPoint.childCount - 1;

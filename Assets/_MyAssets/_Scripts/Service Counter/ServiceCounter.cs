@@ -7,6 +7,8 @@ public class ServiceCounter : MonoBehaviour
 
     [SerializeField] private Transform _container;
     [SerializeField] private Transform _spawnPoint;
+    [SerializeField] private Transform _checkpoint;
+    public Transform Checkpoint => _checkpoint;
     [SerializeField] private CoinArea _coinArea;
     private float _itemOffsetHeight = .1f;
 

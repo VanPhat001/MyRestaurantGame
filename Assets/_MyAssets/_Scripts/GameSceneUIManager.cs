@@ -23,6 +23,6 @@ public class GameSceneUIManager : MonoBehaviour
 
     public void SetCoinText(float value)
     {
-        _coinText.text = value.ToString();
+        _coinText.text = Mathf.Ceil(value).ToString();
     }
 }

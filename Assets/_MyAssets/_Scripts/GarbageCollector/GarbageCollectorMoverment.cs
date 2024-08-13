@@ -31,6 +31,12 @@ public class GarbageCollectorMoverment : MonoBehaviour
         }
         else if (_seat != null)
         {
+            if (!_seat.HasGrabage())
+            {
+                Reset();
+                return;
+            }
+
             MoveToSeat();
         }
         else

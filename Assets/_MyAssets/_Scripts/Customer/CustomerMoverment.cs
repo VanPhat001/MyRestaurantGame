@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +8,7 @@ public class CustomerMoverment : MonoBehaviour
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private Transform _target;
     [SerializeField] private Transform _sandwichPoint;
+    [SerializeField] private TMP_Text _statusText;
     private Transform _exitPoint;
     private CustomerManager _manager;
     private int _customerWaitPointIndex;
@@ -23,6 +23,7 @@ public class CustomerMoverment : MonoBehaviour
 
         _agent.isStopped = false;
         _agent.speed = _moveSpeed;
+        _statusText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -69,6 +70,7 @@ public class CustomerMoverment : MonoBehaviour
             _manager.Anim.SetWalk(false);
             if (_customerWaitPointIndex == 0)
             {
+                // --- OnPeriod1 ---
                 NextPeriod();
             }
             return;
@@ -96,6 +98,7 @@ public class CustomerMoverment : MonoBehaviour
             return;
         }
 
+        // --- OnPeriod2 ---
         _manager.ReceiveSandwichItem();
         var sandwich = FoodPool.Singleton.Get(FoodPool.FoodName.Sandwich, _sandwichPoint).transform;
         sandwich.position = _sandwichPoint.position;
@@ -109,9 +112,12 @@ public class CustomerMoverment : MonoBehaviour
         _seat = SeatManager.Singleton.FindEmptySeat();
         if (_seat == null)
         {
+            _statusText.gameObject.SetActive(true);
             return;
         }
 
+        // --- OnPeriod3 ---
+        _statusText.gameObject.SetActive(false);
         _seat.SetIsUsed(true);
         NextPeriod();
         SetTarget(_seat.SeatPoint);
@@ -128,6 +134,7 @@ public class CustomerMoverment : MonoBehaviour
             return;
         }
 
+        // --- OnPeriod4 ---
         _manager.Anim.SetRun(false);
         _manager.Anim.SetEatTrigger(true);
         _seat.PutSandwich();
@@ -145,6 +152,7 @@ public class CustomerMoverment : MonoBehaviour
             return;
         }
 
+        // --- OnPeriod5 ---
         _manager.Anim.SetEatEnd(true);
         _manager.Anim.SetWalk(true);
         SetTarget(_exitPoint);

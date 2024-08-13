@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlayerItemManager : MonoBehaviour
 {
     [SerializeField] private Transform _itemStartPoint;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _collectCoinSound;
+    [SerializeField] private AudioClip _grabageSound;
     private PlayerManager _manager;
     private float _coin = 0;
     private float _itemOffsetHeight = .1f;
@@ -30,6 +33,17 @@ public class PlayerItemManager : MonoBehaviour
     {
         _coin += value;
         GameSceneUIManager.Singleton.SetCoinText(_coin);
+        PlayCollectCoinSound();
+    }
+
+    void PlayCollectCoinSound()
+    {
+        _audioSource.PlayOneShot(_collectCoinSound);
+    }
+
+    void PlayGrabageSound()
+    {
+        _audioSource.PlayOneShot(_grabageSound);
     }
 
     public void DecreaseCoin(float value)
@@ -54,6 +68,11 @@ public class PlayerItemManager : MonoBehaviour
         }
 
         _collectedItem[itemName] += number;
+
+        if (itemName == ItemName.Grabage)
+        {
+            PlayGrabageSound();
+        }
     }
 
     public int NumberItemGet(ItemName itemName)
@@ -108,6 +127,11 @@ public class PlayerItemManager : MonoBehaviour
             {
                 return;
             }
+        }
+
+        if (itemName == ItemName.Grabage)
+        {
+            PlayGrabageSound();
         }
 
         StartCoroutine(UpdateUIAfterNextFrame());

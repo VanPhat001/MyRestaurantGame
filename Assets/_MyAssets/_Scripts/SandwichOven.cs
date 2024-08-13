@@ -13,6 +13,10 @@ public class SandwichOven : MonoBehaviour
     [SerializeField] private float _heightOffset = .2f;
     [SerializeField] private int _capacity = 0;
     [SerializeField] private LayerMask _playerLayer;
+
+    [Header("Sound")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _finishSound;
     private readonly float _finishTime = 8f;
     private float _timer = 0;
 
@@ -48,6 +52,7 @@ public class SandwichOven : MonoBehaviour
 
     IEnumerator MakeDoneCoroutine()
     {
+        PlayFinishSound();
         SetOpenState(true);
         var sandwich = FoodPool.Singleton.Get(FoodPool.FoodName.Sandwich).transform;
         sandwich.position = _sandwichPoint.position;
@@ -58,6 +63,11 @@ public class SandwichOven : MonoBehaviour
 
         sandwich.SetParent(_spanwPoint);
         SetOpenState(false);
+    }
+
+    void PlayFinishSound()
+    {
+        _audioSource.PlayOneShot(_finishSound);
     }
 
     public bool IsFull()

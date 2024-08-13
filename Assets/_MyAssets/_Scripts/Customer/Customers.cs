@@ -10,6 +10,9 @@ public class Customers : MonoBehaviour
     [SerializeField] private GameObject _customerPrefab;
     [SerializeField] private Transform _startPoint;
     [SerializeField] private Transform _exitPoint;
+    [Header("Sound")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _openDoorSound;
     private bool _isFirstSpawn = true;
     private float _spawnTime = 13f;
     public float SpawnTime { get => _spawnTime; set => _spawnTime = value; }
@@ -45,6 +48,11 @@ public class Customers : MonoBehaviour
         SpawnCustomer(_isFirstSpawn);
     }
 
+    void PlayerOpenDoorSound()
+    {
+        _audioSource.PlayOneShot(_openDoorSound);
+    }
+
     void SpawnCustomer(bool useViewPoint)
     {
         _isFirstSpawn = false;
@@ -54,6 +62,7 @@ public class Customers : MonoBehaviour
         var customer = go.GetComponent<CustomerManager>();
         customer.Init(useViewPoint, _waitPoints[CountUsedPoint()], CountUsedPoint(), _exitPoint);
         _customerQueue.Enqueue(customer);
+        PlayerOpenDoorSound();
     }
 
     int CountUsedPoint()

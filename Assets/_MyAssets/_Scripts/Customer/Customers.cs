@@ -12,6 +12,7 @@ public class Customers : MonoBehaviour
     [SerializeField] private Transform _exitPoint;
     private bool _isFirstSpawn = true;
     private float _spawnTime = 13f;
+    public float SpawnTime { get => _spawnTime; set => _spawnTime = value; }
     private float _firstSpawnDelay = 1f;
     private float _timer;
     private Queue<CustomerManager> _customerQueue = new();
